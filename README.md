@@ -1,6 +1,6 @@
 # React Typescript example Project with Axios and Web API
 
-This app is a CRUD example, made with React Typescript and Axios to consume Web API with Router & Bootstrap 4.
+This app is a CRUD example, made with React Typescript & Axios to consume Web API with Router & Bootstrap 4.
 
 Inspired from https://github.com/bezkoder/react-axios-typescript-example
 
