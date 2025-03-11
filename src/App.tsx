@@ -8,12 +8,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import BookAdd from "./components/book-add.component";
 import Book from "./components/book.component";
 import BookList from "./components/book-list.component";
+import ArticleAdd from "./components/article-add.component";
+import Article from "./components/article.component";
+import ArticleList from "./components/article-list.component";
 import logo from '../src/assets/logo.png'
 
 class App extends Component {
   render() {
     return (
-      <div>
+      <div className="app-container">
         <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -25,39 +28,36 @@ class App extends Component {
           draggable
           pauseOnHover
         />
-        {/* Same as */}
-        <ToastContainer />
-        <nav className="navbar navbar-expand navbar-dark">
+        
+        <nav className="navbar">
           <div className="container">
-                <div className="wrap">
-                <div className="logo">
-                  <Link to={"/books"} className="navbar-brand">
-                    <img src={logo} className="logo" alt="Bunnyshell" />
-                  </Link>
-                </div>
-                <div className="navbar-nav">
-                  <li className="nav-item">
-                    <Link to={"/books"} className="nav-link">
-                      Books
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to={"/books/add"} className="nav-link">
-                      Add Book
-                    </Link>
-                  </li>
-                </div>
+            <Link to={"/"} className="navbar-brand">
+              <img src={logo} alt="Bunnyshell" />
+            </Link>
+            
+            <div className="navbar-nav">
+              <Link to={"/books"} className="nav-link">
+                <i className="fas fa-book"></i> Books
+              </Link>
+              <Link to={"/articles"} className="nav-link">
+                <i className="fas fa-newspaper"></i> Articles
+              </Link>
             </div>
           </div>
         </nav>
 
-        <div className="container mt-3">
-          <Switch>
-            <Route exact path={["/", "/books"]} component={BookList} />
-            <Route exact path="/books/add" component={BookAdd} />
-            <Route path="/books/:id" component={Book} />
-          </Switch>
-        </div>
+        <main className="main-content">
+          <div className="container">
+            <Switch>
+              <Route exact path={["/", "/books"]} component={BookList} />
+              <Route exact path="/books/add" component={BookAdd} />
+              <Route path="/books/:id" component={Book} />
+              <Route exact path="/articles" component={ArticleList} />
+              <Route exact path="/articles/add" component={ArticleAdd} />
+              <Route path="/articles/:id" component={Article} />
+            </Switch>
+          </div>
+        </main>
       </div>
     );
   }

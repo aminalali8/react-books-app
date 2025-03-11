@@ -26,11 +26,6 @@ export default class BookList extends Component<Props, State>{
     this.searchByTitle = this.searchByTitle.bind(this);
 
     this.state = {
-      // books: [
-      //   {id: 1,title: 'How to train 1', description: 'Hiccup aspires to follow his tribe\'s tradition of becoming a dragon slayer.', available: true}, 
-      //   {id: 2,title: 'How to train 2', description: 'Usodas red novlas to follow his tribe', available: true}, 
-      //   {id: 3,title: 'How to train 3', description: 'DesOpdes coma reto cription', available: true}
-      // ],
       books: [],
       currentBook: null,
       currentIndex: 0,
@@ -44,7 +39,6 @@ export default class BookList extends Component<Props, State>{
 
   onChangeSearchTitle(e: ChangeEvent<HTMLInputElement>) {
     const searchTitle = e.target.value;
-
     this.setState({
       searchTitle: searchTitle
     });
@@ -112,98 +106,100 @@ export default class BookList extends Component<Props, State>{
     const { searchTitle, books, currentBook, currentIndex } = this.state;
 
     return (
-      <div className="list row">
-        {currentBook ? (<div className="col-md-12 mb-5">
-            <div className="row books-row">
-              <div className="col-3">
-                <div className="cover"/>
-              </div>
-              <div className="col-9">
-              <h4>Book</h4>
-              <div>
-                <label>
-                  <strong>Title:</strong>
-                </label>{" "}
-                {currentBook.title}
-              </div>
-              <div>
-                <label>
-                  <strong>Description:</strong>
-                </label>{" "}
-                {currentBook.description}
-              </div>
-              <div>
-                <label>
-                  <strong>Availability:</strong>
-                </label>{" "}
-                {currentBook.available ? "Available" : "Lent"}
-              </div>
-              </div>
-            </div>
-        </div>
-        ) : ( '' )}
-        <div className="col-md-6">
-          <h4>Book List</h4>
-          </div>
-        <div className="col-md-6">
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by title"
-              value={searchTitle}
-              onChange={this.onChangeSearchTitle}
-            />
-            <div className="input-group-append">
+      <div className="list">
+        <div className="list-header">
+          <h4>Book Library</h4>
+          <div className="search-container">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search books by title..."
+                value={searchTitle}
+                onChange={this.onChangeSearchTitle}
+              />
               <button
-                className="btn search-btn btn-outline-secondary"
+                className="search-btn"
                 type="button"
                 onClick={this.searchByTitle}
               >
-                Search
+                <i className="fas fa-search"></i> Search
               </button>
             </div>
           </div>
         </div>
-        <div className="col-md-12">
-          <ul className="list-group">
-            {books.length > 0 ?
-              books.map((book: IBookData, index: number) => (
-                <li
-                  className={
-                    "list-group-item " +
-                    (index === currentIndex ? "active" : "")
-                  }
+
+        {currentBook && (
+          <div className="book-detail">
+            <div className="book-detail-content">
+              <div className="book-cover">
+                <div className="cover-placeholder">
+                  <i className="fas fa-book"></i>
+                </div>
+              </div>
+              <div className="book-info">
+                <h4>{currentBook.title}</h4>
+                <div className="info-group">
+                  <label>Description:</label>
+                  <p>{currentBook.description}</p>
+                </div>
+                <div className="info-group">
+                  <label>Status:</label>
+                  <span className={`status-badge ${currentBook.available ? 'available' : 'lent'}`}>
+                    {currentBook.available ? 'Available' : 'Lent'}
+                  </span>
+                </div>
+                <Link to={"/books/" + currentBook.id} className="edit-btn">
+                  <i className="fas fa-edit"></i> Edit Book
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="book-list">
+          {books.length > 0 ? (
+            <div className="book-grid">
+              {books.map((book: IBookData, index: number) => (
+                <div
+                  className={`book-card ${index === currentIndex ? "active" : ""}`}
                   onClick={() => this.setActiveBook(book, index)}
                   key={index}
                 >
-                  <div className="left">{book.title}</div>
-                  <div className="right">
-                    <Link
-                    to={"/books/" + book.id}
-                    className="badge badge-warning"
-                  >
-                    Edit
-                  </Link>
+                  <div className="book-card-cover">
+                    <div className="cover-placeholder">
+                      <i className="fas fa-book"></i>
+                    </div>
                   </div>
+                  <div className="book-card-content">
+                    <h5>{book.title}</h5>
+                    <span className={`status-badge ${book.available ? 'available' : 'lent'}`}>
+                      {book.available ? 'Available' : 'Lent'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="nobooks-wrap">
+              <img src={nobooks} alt="No books available" />
+              <p>No books found in the library</p>
+            </div>
+          )}
+        </div>
 
-                </li>
-              )) : 
-              <div className="nobooks-wrap">
-                  <img src={nobooks} alt="No books" />
-              </div>}
-          </ul>
-          <div className="buttons-wrap">
-              <Link to={"/books/add"} className="btn btn-info add-book-link">
-                    Add Book
-              </Link>
-              {books.length > 0 && <button
-                className="m-3 btn btn-sm btn-danger"
-                onClick={this.removeAllBooks}
-              >
-                Remove All Books
-              </button>}
-          </div>
+        <div className="list-actions">
+          <Link to={"/books/add"} className="add-book-link">
+            <i className="fas fa-plus"></i> Add New Book
+          </Link>
+          {books.length > 0 && (
+            <button
+              className="btn-danger"
+              onClick={this.removeAllBooks}
+            >
+              <i className="fas fa-trash"></i> Remove All Books
+            </button>
+          )}
         </div>
       </div>
     );
